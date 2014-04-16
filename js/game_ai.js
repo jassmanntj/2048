@@ -3,15 +3,20 @@ function Game_AI(manager) {
 }
 
 Game_AI.prototype.runAI = function() {
-	this.run(this, 0);
+	this.dumb(this.manager, this, 0);
 }
 
-Game_AI.prototype.run = function(that, i) {
-	if(that.manager.isGameTerminated()) return;
+Game_AI.prototype.runClone = function() {
+	this.clone = manager.clone();
+	this.dumb(clone, this, 0);
+}
+
+Game_AI.prototype.dumb = function(manager, that, i) {
+	if(manager.isGameTerminated()) return;
 	else {
-		that.manager.move(i);
+		manager.move(i);
 		i = (i + 1)%4
-		setTimeout(function(){that.run(that, i)}, 100);
+		setTimeout(function(){that.dumb(manager, that, i)}, 100);
 	}
 }
 
