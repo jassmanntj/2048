@@ -15,6 +15,17 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.setup();
 }
 
+GameManager.prototype.clone = function () {
+	var gm 	= new GameManager(this.size, KeyboardInputManager, 
+		HTMLActuator, LocalStorageManager);	
+	gm.grid = new Grid(this.grid.size, this.storageManager.getGameState().grid.cells);
+	gm.score       = this.score;
+    gm.over        = this.over;
+    gm.won         = this.won;
+    gm.keepPlaying = this.keepPlaying;
+	return gm;
+};
+
 // Restart the game
 GameManager.prototype.restart = function () {
   this.storageManager.clearGameState();
