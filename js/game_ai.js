@@ -7,7 +7,7 @@ Game_AI.prototype.runAI = function() {
 }
 
 Game_AI.prototype.runClone = function() {
-	this.clone = manager.clone();
+	this.clone = this.manager.clone();
 	this.dumb(clone, this, 0);
 }
 
@@ -44,7 +44,6 @@ Game_AI.prototype.search = function(level, manager) {
 		clone.moveNoTile(index);
 		cells = clone.grid.availableCells();
 		for(var index2 = 0; index2 < cells.length; index2++) {
-			clone = clone.clone();
 			t2 = new Tile(cells[index2],2);
 			t4 = new Tile(cells[index2],4);
 			clone.grid.insertTile(t2);
@@ -54,6 +53,7 @@ Game_AI.prototype.search = function(level, manager) {
 			clone.grid.insertTile(t4);
 			moveVal = this.search(level-1, clone);
 			moveTotal += .1*moveVal[1];
+			clone.grid.removeTile(t4);
 		}
 		moveTotal /= cells.length;
 		if(max[1] < moveTotal) max = [index, moveTotal];
