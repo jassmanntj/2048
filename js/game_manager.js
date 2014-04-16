@@ -9,6 +9,8 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+  
+  this.ai = new Game_AI(this);
 
   this.setup();
 }
@@ -129,28 +131,13 @@ GameManager.prototype.moveTile = function (tile, cell) {
   this.grid.cells[cell.x][cell.y] = tile;
   tile.updatePosition(cell);
 };
-GameManager.prototype.runAI = function() {
-  var i = 0;
-  while(!this.isGameTerminated()) {
-    this.move(i);
-	i = (i + 1)%4;
-	//this.pausecomp(100);
-  }
-}
-
-GameManager.prototype.pausecomp = function(time) {
-  var date = new Date();
-  var curDate = null;
-  do{ curDate = new Date(); }
-  while(curDate-date < time);
-}
 
 // Move tiles on the grid in the specified direction
 GameManager.prototype.move = function (direction) {
   // 0: up, 1: right, 2: down, 3: left 4: run ai
   var self = this;
   if(direction==4) {
-    this.runAI();
+	this.ai.runAI();
 	return;
   }
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
