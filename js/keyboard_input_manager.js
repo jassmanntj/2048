@@ -43,7 +43,7 @@ KeyboardInputManager.prototype.listen = function () {
     76: 1, // Vim right
     74: 2, // Vim down
     72: 3, // Vim left
-    87: 0, // W
+    87: 4, // W
     68: 1, // D
     83: 2, // S
     65: 3  // A
