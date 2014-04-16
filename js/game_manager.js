@@ -52,7 +52,7 @@ GameManager.prototype.keepPlaying = function () {
 
 // Return true if the game is lost, or has won and the user hasn't kept playing
 GameManager.prototype.isGameTerminated = function () {
-  if ((this.over || (this.won && !this.keepPlaying)) && !isClone){
+  if ((this.over || (this.won && !this.keepPlaying)) && !this.isClone){
     return true;
   } else {
     return false;
@@ -80,7 +80,7 @@ GameManager.prototype.setup = function () {
 
     // Add the initial tiles
     this.addStartTiles();
-	if (!isClone) {
+	if (!this.isClone) {
 		this.actuate();
 	}
   }
@@ -218,8 +218,8 @@ GameManager.prototype.move = function (direction) {
     if (!this.movesAvailable()) {
       this.over = true; // Game over!
     }
-
-    this.actuate();
+	if(!this.isClone)
+		this.actuate();
   }
 };
 
