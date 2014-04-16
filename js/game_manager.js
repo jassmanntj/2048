@@ -1,4 +1,4 @@
-function GameManager(size, InputManager, Actuator, StorageManager) {
+function GameManager(size, InputManager, Actuator, StorageManager, isClone) {
   this.size           = size; // Size of the grid
   this.inputManager   = new InputManager;
   this.storageManager = new StorageManager;
@@ -11,13 +11,14 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
   
   this.ai = new Game_AI(this);
-
+  this.isClone = isClone;	
+	
   this.setup();
 }
 
 GameManager.prototype.clone = function () {
 	var gm 	= new GameManager(this.size, KeyboardInputManager, 
-		HTMLActuator, LocalStorageManager);	
+		HTMLActuator, LocalStorageManager, true);	
 		
 	//gm.grid = new Grid(this.grid.size, this.storageManager.getGameState().grid.cells);
 	gm.grid = new Grid(this.grid.size, 0);
@@ -51,7 +52,7 @@ GameManager.prototype.keepPlaying = function () {
 
 // Return true if the game is lost, or has won and the user hasn't kept playing
 GameManager.prototype.isGameTerminated = function () {
-  if (this.over || (this.won && !this.keepPlaying)) {
+  if ((this.over || (this.won && !this.keepPlaying)) && !isClone){
     return true;
   } else {
     return false;
@@ -79,7 +80,9 @@ GameManager.prototype.setup = function () {
 
     // Add the initial tiles
     this.addStartTiles();
-	this.actuate();
+	if (!isClone) {
+		this.actuate();
+	}
   }
 
   // Update the actuator
