@@ -18,7 +18,17 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 GameManager.prototype.clone = function () {
 	var gm 	= new GameManager(this.size, KeyboardInputManager, 
 		HTMLActuator, LocalStorageManager);	
-	gm.grid = new Grid(this.grid.size, this.storageManager.getGameState().grid.cells);
+		
+	//gm.grid = new Grid(this.grid.size, this.storageManager.getGameState().grid.cells);
+	gm.grid = new Grid(this.grid.size, 0);
+	for (var x = 0; x < this.grid.size; x++) {
+		var row = gm.grid.cells[x] = [];
+		for (var y = 0; y < this.grid.size; y++) {
+			var tile = this.grid.cells[x][y];
+			row.push(tile ? new Tile({x:tile.x, y:tile.y}, tile.value) : null);
+		}
+	}	
+	
 	gm.score       = this.score;
     gm.over        = this.over;
     gm.won         = this.won;
