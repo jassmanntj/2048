@@ -85,7 +85,7 @@ GameManager.prototype.setup = function () {
 	}
   }
 
-  // Update the actuator
+  
 };
 
 // Set up the initial tiles to start the game with
