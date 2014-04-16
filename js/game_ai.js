@@ -41,18 +41,18 @@ Game_AI.prototype.search = function(level, manager) {
 	for(var index = 0; index < 4; index++) {
 		var clone = manager.clone();
 		var moveTotal = 0;
-		clone.moveNoTile(moves[index]);
+		clone.moveNoTile(index);
 		cells = clone.grid.availableCells();
 		for(var index2 = 0; index2 < cells.length; index2++) {
 			clone = clone.clone();
 			t2 = new Tile(cells[index2],2);
 			t4 = new Tile(cells[index2],4);
 			clone.grid.insertTile(t2);
-			moveVal = search(level-1, clone);
+			moveVal = this.search(level-1, clone);
 			moveTotal += .9*moveVal[1];
 			clone.grid.removeTile(t2);
 			clone.grid.insertTile(t4);
-			moveVal = search(level-1, clone);
+			moveVal = this.search(level-1, clone);
 			moveTotal += .1*moveVal[1];
 		}
 		moveTotal /= cells.length;

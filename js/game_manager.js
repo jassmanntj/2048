@@ -261,7 +261,6 @@ GameManager.prototype.moveNoTile = function (direction) {
       }
     });
   });
-  this.actuate();
 }
 
 
