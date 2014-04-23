@@ -122,3 +122,20 @@ Grid.prototype.serialize = function () {
     cells: cellState
   };
 };
+
+Grid.prototype.structureRating = function() {
+	var product = 1;
+	for (var i = 0; i < this.size - 1; i++) {
+		if (this.cells[i][3] && this.cells[i + 1][3]) {
+			var ratio = this.cells[i + 1][3].value / this.cells[i][3].value;
+			product *= ratio > 1 ? 1 : ratio;
+		}
+	}
+	for (var i = 0; i < this.size - 1; i++) {
+		if (this.cells[3][i] && this.cells[3][i + 1]) {
+			var ratio = this.cells[3][i + 1].value / this.cells[3][i].value;
+			product *= ratio > 1 ? 1 : ratio;
+		}		
+	}
+	return Math.pow(product, (1/6));
+};
