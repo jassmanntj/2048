@@ -92,10 +92,3 @@ Game_AI.prototype.search = function(level, manager) {
 	}
 	return max;
 }
-
-Game_AI.prototype.pausecomp = function(time) {
-  var date = new Date();
-  var curDate = null;
-  do{ curDate = new Date(); }
-  while(curDate-date < time);
-}
