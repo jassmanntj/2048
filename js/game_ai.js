@@ -27,9 +27,10 @@ Game_AI.prototype.searchAI = function() {
 Game_AI.prototype.searchai = function(manager, that) {
 	if(manager.isGameTerminated()) return;
 	else {
-		m = that.search(4, that.manager);
+		m = that.search(1, that.manager);
 		manager.move(m[0]);
-		setTimeout(function(){that.searchai(manager, that)}, 200);
+		//setTimeout(function(){that.searchai(manager, that)}, 200);
+		setTimeout(function(){that.searchai(manager, that)}, 0);
 	}
 }
 
@@ -56,6 +57,20 @@ Game_AI.prototype.evaluateMoves = function(grid) {
 				if(!grid.cells[x][xPrime]) {
 					if(xPrime < y) moves[0] = 1;
 					else moves[2] = 1;
+				}
+			}
+			
+			for (var direction = 0; direction < 4; direction++) {
+				var vector = {
+					0: { x: 0,  y: -1 }, // Up
+					1: { x: 1,  y: 0 },  // Right
+					2: { x: 0,  y: 1 },  // Down
+					3: { x: -1, y: 0 }   // Left
+				}[direction];
+				var cell   = { x: x + vector.x, y: y + vector.y };
+				var other  = grid.cellContent(cell);
+				if (other && other.value === tile.value) {	
+					moves[direction] = 1;
 				}
 			}
 		}
