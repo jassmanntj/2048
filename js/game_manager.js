@@ -1,10 +1,10 @@
 function GameManager(size, InputManager, Actuator, StorageManager, isClone) {
-  this.size           = size; // Size of the grid
+  this.size = size; // Size of the grid
   if (InputManager) this.inputManager   = new InputManager;
-  this.storageManager = new StorageManager;
-  this.actuator       = new Actuator;
+  if (StorageManager) this.storageManager = new StorageManager;
+  if (Actuator) this.actuator       = new Actuator;
 
-  this.startTiles     = 2;
+  this.startTiles = 2;
 
   if (InputManager) {
 	this.inputManager.on("move", this.move.bind(this));
@@ -20,9 +20,7 @@ function GameManager(size, InputManager, Actuator, StorageManager, isClone) {
 GameManager.prototype.clone = function () {
 	// var gm 	= new GameManager(this.size, KeyboardInputManager, 
 		// HTMLActuator, LocalStorageManager, true);	
-	var gm 	= new GameManager(this.size, 0, 
-		HTMLActuator, LocalStorageManager, true);	
-
+	var gm 	= new GameManager(this.size, 0, HTMLActuator, LocalStorageManager, true);
 	
 	//gm.grid = new Grid(this.grid.size, this.storageManager.getGameState().grid.cells);
 	gm.grid = new Grid(this.grid.size, 0);
