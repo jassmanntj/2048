@@ -27,7 +27,7 @@ Game_AI.prototype.searchAI = function() {
 Game_AI.prototype.searchai = function(manager, that) {
 	if(manager.isGameTerminated()) return;
 	else {
-		m = that.search(2, that.manager);
+    	m = that.search(2, that.manager);
 		manager.move(m[0]);
 		setTimeout(function(){that.searchai(manager, that)}, 0);
 	}
