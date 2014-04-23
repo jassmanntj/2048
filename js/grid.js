@@ -43,10 +43,17 @@ Grid.prototype.randomAvailableCell = function () {
 };
 
 Grid.prototype.worstAvailableCell = function() {
-	var cells = this.availableCells();
-	if(cells.length) {
-		return cells[cells.length-1];
-	}
+	var maxCell = null;
+	var maxValue = -1;
+	this.eachCell(function (x, y, tile) {
+			if(!tile) {
+				if( ((x+1) * (y+1)) > maxValue) {
+					maxValue = (x+1) * (y+1);
+					maxCell = {x: x, y: y};
+				}
+			}
+		});
+	return maxCell;
 }
 
 Grid.prototype.availableCells = function () {
