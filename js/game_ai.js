@@ -27,9 +27,9 @@ Game_AI.prototype.searchAI = function() {
 Game_AI.prototype.searchai = function(manager, that) {
 	if(manager.isGameTerminated()) return;
 	else {
-		m = that.search(2, that.manager);
+		m = that.search(4, that.manager);
 		manager.move(m[0]);
-		setTimeout(function(){that.searchai(manager, that)}, 20);
+		setTimeout(function(){that.searchai(manager, that)}, 200);
 	}
 }
 
@@ -38,7 +38,7 @@ Game_AI.prototype.evaluateGrid = function(grid) {
 	grid.eachCell(function (x, y, tile) {
 		if(tile) {
 			if(tile.value > 1024) score += tile.value * tile.value * (x+1) * (y+1);
-			score += tile.value * tile.value;//(y+1) * (x+1);
+			score += tile.value * (y+1) * (x+1);
 		}
 	});
 	return score * (grid.availableCells().length+1);
