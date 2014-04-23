@@ -27,7 +27,7 @@ Game_AI.prototype.searchAI = function() {
 Game_AI.prototype.searchai = function(manager, that) {
 	if(manager.isGameTerminated()) return;
 	else {
-    	m = that.search(2, that.manager);
+    	m = that.search(4, that.manager);
 		manager.move(m[0]);
 		setTimeout(function(){that.searchai(manager, that)}, 0);
 	}
@@ -44,9 +44,26 @@ Game_AI.prototype.evaluateGrid = function(grid) {
 	return score * (grid.availableCells().length+1);
 }
 
+Game_AI.prototype.evaluateGrid_TEST = function(grid) {
+	var score = 0;
+	var weights = [ [512, 256, 16, 8],
+					[256, 128, 32, 4],
+					[16, 32, 64, 2],
+					[8, 4, 2, 1] ];
+	grid.eachCell(function (x, y, tile) {
+		if(tile) {
+			//if(tile.value > 1024) score += tile.value * tile.value * (x+1) * (y+1);
+			score += tile.value / weights[x][y];
+		}
+	});
+	return score * (grid.availableCells().length+1);
+}
+
 Game_AI.prototype.evaluateMoves = function(grid) {
 	var moves = [0,0,0,0];
 	grid.eachCell(function (x, y, tile) {
+		if (moves[0] === 1 && moves[1] === 1
+			&& moves[2] === 1 && moves[3] === 1) return moves;
 		if(tile) {
 			for(xPrime = 0; xPrime < grid.size; xPrime++) {
 				if(!grid.cells[xPrime][y]) {
@@ -79,7 +96,7 @@ Game_AI.prototype.evaluateMoves = function(grid) {
 
 Game_AI.prototype.search = function(level, manager) {
 	var max = [0, -1];
-	if(level==0) return [0, this.evaluateGrid(manager.grid)];
+	if(level==0) return [0, this.evaluateGrid_TEST(manager.grid)];
 	var moves = this.evaluateMoves(manager.grid);
 	for(var index = 0; index < 4; index++) {
 		if(moves[index]) {
