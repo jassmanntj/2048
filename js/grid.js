@@ -42,6 +42,13 @@ Grid.prototype.randomAvailableCell = function () {
   }
 };
 
+Grid.prototype.worstAvailableCell = function() {
+	var cells = this.availableCells();
+	if(cells.length) {
+		return cells[cells.length-1];
+	}
+}
+
 Grid.prototype.availableCells = function () {
   var cells = [];
 

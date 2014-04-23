@@ -80,7 +80,7 @@ GameManager.prototype.setup = function () {
 
     // Add the initial tiles
     this.addStartTiles();
-	if (!isClone) {
+	if (!this.isClone) {
 		this.actuate();
 	}
   }
@@ -104,6 +104,13 @@ GameManager.prototype.addRandomTile = function () {
     this.grid.insertTile(tile);
   }
 };
+
+GameManager.prototype.addWorstTile = function() {
+	if(this.grid.cellsAvailable()) {
+		var tile = new Tile(this.grid.worstAvailableCell(), 2);
+		this.grid.insertTile(tile);
+	}
+}
 
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
@@ -224,7 +231,7 @@ GameManager.prototype.move = function (direction) {
 };
 
 // Move tiles on the grid in the specified direction
-GameManager.prototype.moveNoTile = function (direction) {
+GameManager.prototype.moveWorstTile = function (direction) {
   // 0: up, 1: right, 2: down, 3: left 4: run ai
   var self = this;
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
@@ -274,6 +281,14 @@ GameManager.prototype.moveNoTile = function (direction) {
       }
     });
   });
+  if (moved) {
+    this.addWorstTile();
+
+    if (!this.movesAvailable()) {
+      this.over = true; // Game over!
+    }
+  }
+  
 }
 
 

@@ -27,36 +27,68 @@ Game_AI.prototype.searchAI = function() {
 Game_AI.prototype.searchai = function(manager, that) {
 	if(manager.isGameTerminated()) return;
 	else {
-		m = that.search(2, that.manager);
+		m = that.search(4, that.manager);
 		manager.move(m[0]);
-		setTimeout(function(){that.searchai(manager, that)}, 100);
+		setTimeout(function(){that.searchai(manager, that)}, 200);
 	}
 }
-		
-		
+
+Game_AI.prototype.evaluateGrid = function(grid) {
+	var score = 0;
+	grid.eachCell(function (x, y, tile) {
+		if(tile) {
+			if(tile.value > 1024) score += tile.value * tile.value * (x+1) * (y+1);
+			score += tile.value * (y+1) * (x+1);
+		}
+	});
+	return score * (grid.availableCells().length+1);
+}
+
+Game_AI.prototype.evaluateMoves = function(grid) {
+	var moves = [0,0,0,0];
+	grid.eachCell(function (x, y, tile) {
+		if(tile) {
+			for(xPrime = 0; xPrime < grid.size; xPrime++) {
+				if(!grid.cells[xPrime][y]) {
+					if(xPrime < x) moves[3] = 1;
+					else moves[1] = 1;
+				}
+				if(!grid.cells[x][xPrime]) {
+					if(xPrime < y) moves[0] = 1;
+					else moves[2] = 1;
+				}
+			}
+		}
+	});
+	return moves;
+}	
 
 Game_AI.prototype.search = function(level, manager) {
-	var max = [0, manager.score];
-	if(level==0) return max;
+	var max = [0, -1];
+	if(level==0) return [0, this.evaluateGrid(manager.grid)];
+	var moves = this.evaluateMoves(manager.grid);
 	for(var index = 0; index < 4; index++) {
-		var clone = manager.clone();
+		if(moves[index]) {
+		this.clone = manager.clone();
 		var moveTotal = 0;
-		clone.moveNoTile(index);
-		cells = clone.grid.availableCells();
-		for(var index2 = 0; index2 < cells.length; index2++) {
-			t2 = new Tile(cells[index2],2);
-			t4 = new Tile(cells[index2],4);
-			clone.grid.insertTile(t2);
-			moveVal = this.search(level-1, clone);
-			moveTotal += .9*moveVal[1];
-			clone.grid.removeTile(t2);
-			clone.grid.insertTile(t4);
-			moveVal = this.search(level-1, clone);
-			moveTotal += .1*moveVal[1];
-			clone.grid.removeTile(t4);
+		this.clone.move(index);
+		moveTotal = this.search(level-1, this.clone);
+		//cells = clone.grid.availableCells();
+		//for(var index2 = 0; index2 < cells.length; index2++) {
+		//	t2 = new Tile(cells[index2],2);
+		//	t4 = new Tile(cells[index2],4);
+		//	clone.grid.insertTile(t2);
+		//	moveVal = this.search(level-1, clone);
+		//	moveTotal += .9*moveVal[1];
+		//	clone.grid.removeTile(t2);
+		//	clone.grid.insertTile(t4);
+		//	moveVal = this.search(level-1, clone);
+		//	moveTotal += .1*moveVal[1];
+		//	clone.grid.removeTile(t4);
+		//}
+		//moveTotal /= cells.length;
+		if(max[1] <= moveTotal[1]) max = [index, moveTotal[1]];
 		}
-		moveTotal /= cells.length;
-		if(max[1] < moveTotal) max = [index, moveTotal];
 	}
 	return max;
 }
