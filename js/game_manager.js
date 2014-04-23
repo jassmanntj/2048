@@ -13,6 +13,8 @@ function GameManager(size, InputManager, Actuator, StorageManager, isClone) {
   }
   this.ai = new Game_AI(this);
   this.isClone = isClone;	
+  this.wins = 0;
+  this.totalGames = 0;
 	
   this.setup();
 }
@@ -86,6 +88,7 @@ GameManager.prototype.setup = function () {
     this.addStartTiles();
 	if (!this.isClone) {
 		this.actuate();
+		this.ai.searchAI();
 	}
   }
 
@@ -130,10 +133,10 @@ GameManager.prototype.actuate = function () {
   }
 
   this.actuator.actuate(this.grid, {
-    score:      this.score,
+    score:      this.wins,//this.score,
     over:       this.over,
     won:        this.won,
-    bestScore:  this.storageManager.getBestScore(),
+    bestScore:  this.totalGames,//this.storageManager.getBestScore(),
     terminated: this.isGameTerminated()
   });
 
