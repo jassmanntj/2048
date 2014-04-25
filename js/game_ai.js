@@ -2,6 +2,10 @@ function Game_AI(manager) {
 	this.manager = manager;
 	this.won = 0;
 	this.total = 0;
+	this.weights = [ [1, 2, 32, 64],
+					[2, 4, 16, 128],
+					[32, 16, 8, 256],
+					[64, 128, 256, 512] ];
 }
 
 Game_AI.prototype.runAI = function() {
@@ -57,14 +61,12 @@ Game_AI.prototype.evaluateGrid = function(grid) {
 
 Game_AI.prototype.evaluateGrid_TEST = function(grid) {
 	var score = 0;
-	var weights = [ [512, 256, 16, 8],
-					[256, 128, 32, 4],
-					[16, 32, 64, 2],
-					[8, 4, 2, 1] ];
+	var w = this.weights;
 	grid.eachCell(function (x, y, tile) {
 		if(tile) {
 			//if(tile.value > 1024) score += tile.value * tile.value * (x+1) * (y+1);
-			score += tile.value / weights[x][y];
+			value = tile.value * w[y][x];
+			score += value;//* value;
 		}
 	});
 	return score * (grid.availableCells().length+1);

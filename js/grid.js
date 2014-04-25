@@ -42,13 +42,13 @@ Grid.prototype.randomAvailableCell = function () {
   }
 };
 
-Grid.prototype.worstAvailableCell = function() {
+Grid.prototype.worstAvailableCell = function(weights) {
 	var maxCell = null;
 	var maxValue = -1;
 	this.eachCell(function (x, y, tile) {
 			if(!tile) {
-				if( ((x+1) * (y+1)) > maxValue) {
-					maxValue = (x+1) * (y+1);
+				if( weights[y][x] > maxValue) {
+					maxValue = weights[y][x];
 					maxCell = {x: x, y: y};
 				}
 			}

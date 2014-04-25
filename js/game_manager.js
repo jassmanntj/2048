@@ -114,7 +114,7 @@ GameManager.prototype.addRandomTile = function () {
 
 GameManager.prototype.addWorstTile = function() {
 	if(this.grid.cellsAvailable()) {
-		var tile = new Tile(this.grid.worstAvailableCell(), 2);
+		var tile = new Tile(this.grid.worstAvailableCell(this.ai.weights), 2);
 		this.grid.insertTile(tile);
 	}
 }
