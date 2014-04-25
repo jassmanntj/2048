@@ -131,18 +131,26 @@ Grid.prototype.serialize = function () {
 };
 
 Grid.prototype.structureRating = function() {
-	var product = 1;
-	for (var i = 0; i < this.size - 1; i++) {
-		if (this.cells[i][3] && this.cells[i + 1][3]) {
-			var ratio = this.cells[i + 1][3].value / this.cells[i][3].value;
-			product *= ratio > 1 ? 1 : ratio;
+	var botRow = [];
+	var sideRow = [];
+	
+	for (var i = this.size - 1; i > 0; i--) {
+		if (this.cells[i][this.size-1]) {
+			botRow.push(this.cells[i][this.size-1].value);	
 		}
+		// if (this.cells[this.size-1][i]) {
+			// sideRow.push(this.cells[this.size-1][i].value);	
+		// }
 	}
-	for (var i = 0; i < this.size - 1; i++) {
-		if (this.cells[3][i] && this.cells[3][i + 1]) {
-			var ratio = this.cells[3][i + 1].value / this.cells[3][i].value;
-			product *= ratio > 1 ? 1 : ratio;
-		}		
+	
+	var value = 1;
+	
+	for (i = 0; i < botRow.length-1; i++) {
+		if (botRow[i] < botRow[i+1]) value /= 2;
 	}
-	return Math.pow(product, (1/6));
+	// for (i = 0; i < sideRow.length-1; i++) {
+		// if (sideRow[i] < sideRow[i+1]) value /= 2;
+	// }
+	
+	return value;
 };

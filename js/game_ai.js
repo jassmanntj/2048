@@ -38,9 +38,13 @@ Game_AI.prototype.searchai = function(manager, that) {
 		return;
 	}
 	else {
-		var levels = 9 - manager.grid.availableCells().length;
-		levels = levels > 3 ? levels : 4;
-    	m = that.search(levels, that.manager);
+		var maxLevels = 8;
+		var minLevels = 4;
+		
+		var levels = maxLevels - manager.grid.availableCells().length;
+		levels = levels < minLevels ? minLevels : levels;
+    	
+		m = that.search(levels, that.manager);
 		manager.move(m[0]);
 		setTimeout(function(){that.searchai(manager, that)}, 0);
 	}
@@ -69,7 +73,7 @@ Game_AI.prototype.evaluateGrid_TEST = function(grid) {
 			score += value;//* value;
 		}
 	});
-	return score * (grid.availableCells().length+1);
+	return score * (grid.availableCells().length+1);	
 }
 
 Game_AI.prototype.evaluateMoves = function(grid) {
