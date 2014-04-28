@@ -1,11 +1,14 @@
 function Game_AI(manager) {
 	this.manager = manager;
-	this.won = 0;
-	this.total = 0;
 	this.weights = [ [1, 2, 32, 64],
 					[2, 4, 16, 128],
 					[32, 16, 8, 256],
 					[64, 128, 256, 512] ];
+	this.lastWins = 1;
+	this.setMax = true;
+	this.setMin = false;
+	this.minPercent = 100;
+	this.maxPercent = 100;
 }
 
 Game_AI.prototype.runAI = function() {
@@ -34,15 +37,47 @@ Game_AI.prototype.searchai = function(manager, that) {
 	if(this.manager.isGameTerminated()) {
 		if(this.manager.won) this.manager.wins++;
 		this.manager.totalGames++;
+		if(this.manager.totalGames == 100) {
+			if(this.setMax) this.maxPercent = this.manager.wins/this.lastWins;
+			if(this.setMin) this.minPercent = this.manager.wins/this.lastWins;
+			if(this.maxPercent >= this.minPercent ) {
+				this.setMin = false;
+				if(this.maxPercent > 1) this.manager.maxLevels++;
+				else {
+					this.manager.maxLevels--;
+					if(this.manager.minLevels > this.manager.maxLevels) {
+						this.manager.minLevels = this.manager.maxLevels;
+						this.setMin = true;
+					}
+				}
+				this.setMax = true;
+				this.lastWins = this.manager.wins;
+				this.manager.totalGames = 0;
+				this.manager.wins = 0;
+			}
+			else {
+				this.setMax = false;
+				if(this.minPercent > 1) {
+					this.manager.minLevels++;
+					if(this.manager.minLevels > this.manager.maxLevels) {
+						this.manager.maxLevels = this.manager.minLevels;
+						this.setMax = true;
+					}
+				}
+				else this.manager.minLevels--;
+				this.setMin = true;
+				this.lastWins = this.manager.wins;
+				this.manager.totalGames = 0;
+				this.manager.wins = 0;
+				}
+			}
 		this.manager.restart();
 		return;
 	}
 	else {
-		var maxLevels = 8;
-		var minLevels = 4;
 		
-		var levels = maxLevels - manager.grid.availableCells().length;
-		levels = levels < minLevels ? minLevels : levels;
+		var levels = this.manager.maxLevels - manager.grid.availableCells().length;
+		levels = levels < this.manager.minLevels ? this.manager.minLevels : levels;
     	
 		m = that.search(levels, that.manager);
 		manager.move(m[0]);

@@ -15,6 +15,8 @@ function GameManager(size, InputManager, Actuator, StorageManager, isClone) {
   this.isClone = isClone;	
   this.wins = 0;
   this.totalGames = 0;
+  this.maxLevels = 4;
+  this.minLevels = 3;
 	
   this.setup();
 }
@@ -137,7 +139,9 @@ GameManager.prototype.actuate = function () {
     over:       this.over,
     won:        this.won,
     bestScore:  this.totalGames,//this.storageManager.getBestScore(),
-    terminated: this.isGameTerminated()
+    terminated: this.isGameTerminated(),
+	min:		this.minLevels,
+	max:		this.maxLevels
   });
 
 };

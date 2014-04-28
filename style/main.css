@@ -50,7 +50,7 @@ h1.title {
   float: right;
   text-align: right; }
 
-.score-container, .best-container {
+.score-container, .best-container, .min-container, .max-container {
   position: relative;
   display: inline-block;
   background: #bbada0;
@@ -63,7 +63,7 @@ h1.title {
   color: white;
   margin-top: 8px;
   text-align: center; }
-  .score-container:after, .best-container:after {
+  .score-container:after, .best-container:after, .min-container:after, .max-container:after {
     position: absolute;
     width: 100%;
     top: 10px;
@@ -89,11 +89,17 @@ h1.title {
     -moz-animation-fill-mode: both;
     animation-fill-mode: both; }
 
+.min-container:after {
+  content: "Min"; }
+
+.max-container:after {
+  content: "Max"; }
+	
 .score-container:after {
-  content: "Score"; }
+  content: "Wins"; }
 
 .best-container:after {
-  content: "Best"; }
+  content: "Games"; }
 
 p {
   margin-top: 0;
