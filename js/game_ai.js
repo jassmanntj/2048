@@ -1,14 +1,28 @@
 function Game_AI(manager) {
 	this.manager = manager;
-	this.weights = [ [1, 2, 32, 64],
+	this.weightsA = [ [1, 2, 32, 64],
 					[2, 4, 16, 128],
 					[32, 16, 8, 256],
 					[64, 128, 256, 512] ];
-	this.lastWins = 1;
+	this.weightsB =  [ [64, 128, 256, 512],
+					[32, 16, 8, 256],
+					[2, 4, 16, 128],
+					[1, 2, 32, 64] ];
+	this.weightsC = [ [512, 256, 128, 64],
+					[256, 8, 16, 32],
+					[128, 16, 4, 2],
+					[64, 32, 2, 1] ];
+	this.weightsD = [ [64, 32, 2, 1],
+					[128, 16, 4, 2],
+					[256, 8, 16, 32],
+					[512, 256, 128, 64] ];
+	this.weights = this.weightsA;
+	this.lastWins = 50;
 	this.setMax = true;
 	this.setMin = false;
 	this.minPercent = 100;
 	this.maxPercent = 100;
+	this.averageTime = 0;
 }
 
 Game_AI.prototype.runAI = function() {
@@ -30,6 +44,7 @@ Game_AI.prototype.dumb = function(manager, that, i) {
 }
 
 Game_AI.prototype.searchAI = function() {
+	this.startTime = Date.now();
 	this.searchai(this.manager,this);
 }
 
@@ -37,49 +52,40 @@ Game_AI.prototype.searchai = function(manager, that) {
 	if(this.manager.isGameTerminated()) {
 		if(this.manager.won) this.manager.wins++;
 		this.manager.totalGames++;
+		this.averageTime += (Date.now() -  this.startTime)/100;
 		if(this.manager.totalGames == 100) {
-			if(this.setMax) this.maxPercent = this.manager.wins/this.lastWins;
-			if(this.setMin) this.minPercent = this.manager.wins/this.lastWins;
-			if(this.maxPercent >= this.minPercent ) {
-				this.setMin = false;
-				if(this.maxPercent > 1) this.manager.maxLevels++;
-				else {
-					this.manager.maxLevels--;
-					if(this.manager.minLevels > this.manager.maxLevels) {
-						this.manager.minLevels = this.manager.maxLevels;
-						this.setMin = true;
-					}
-				}
-				this.setMax = true;
-				this.lastWins = this.manager.wins;
-				this.manager.totalGames = 0;
-				this.manager.wins = 0;
-			}
-			else {
-				this.setMax = false;
-				if(this.minPercent > 1) {
-					this.manager.minLevels++;
-					if(this.manager.minLevels > this.manager.maxLevels) {
-						this.manager.maxLevels = this.manager.minLevels;
-						this.setMax = true;
-					}
-				}
-				else this.manager.minLevels--;
-				this.setMin = true;
-				this.lastWins = this.manager.wins;
-				this.manager.totalGames = 0;
-				this.manager.wins = 0;
-				}
-			}
+			console.log("%d\t%d\t%d",this.manager.maxLevels,this.manager.wins,this.averageTime);
+			this.manager.totalGames = 0;
+			this.manager.wins = 0;
+			this.averageTime = 0;
+			this.manager.maxLevels++;
+		}
 		this.manager.restart();
 		return;
 	}
 	else {
 		
-		var levels = this.manager.maxLevels - manager.grid.availableCells().length;
-		levels = levels < this.manager.minLevels ? this.manager.minLevels : levels;
-    	
-		m = that.search(levels, that.manager);
+		//var levels = this.manager.maxLevels - manager.grid.availableCells().length;
+		//levels = levels < this.manager.minLevels ? this.manager.minLevels : levels;
+		scoreA = this.evaluateGrid_TEST(this.manager.grid,this.weightsA);
+		scoreB = this.evaluateGrid_TEST(this.manager.grid,this.weightsB);
+		scoreC = this.evaluateGrid_TEST(this.manager.grid,this.weightsC);
+		scoreD = this.evaluateGrid_TEST(this.manager.grid,this.weightsD);
+		score = scoreA;
+		this.weights = this.weightsA;
+		if(scoreB > score) {
+			this.weights = this.weightsB;
+			score = scoreB;
+		}
+		if(scoreC > score) {
+			this.weights = this.weightsC;
+			score = scoreC;
+		}
+		if(scoreD > score) {
+			this.weights = this.weightsD;
+			score = scoreD;
+		}
+		m = that.search(this.manager.maxLevels, that.manager);
 		manager.move(m[0]);
 		setTimeout(function(){that.searchai(manager, that)}, 0);
 	}

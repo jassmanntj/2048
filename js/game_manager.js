@@ -15,8 +15,8 @@ function GameManager(size, InputManager, Actuator, StorageManager, isClone) {
   this.isClone = isClone;	
   this.wins = 0;
   this.totalGames = 0;
-  this.maxLevels = 4;
-  this.minLevels = 3;
+  this.maxLevels = 1;
+  this.minLevels = 5;
 	
   this.setup();
 }
