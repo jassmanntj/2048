@@ -104,9 +104,8 @@ Game_AI.prototype.evaluateGrid = function(grid) {
 	return score;//* (grid.availableCells().length+1);
 }
 
-Game_AI.prototype.evaluateGrid_TEST = function(grid) {
+Game_AI.prototype.evaluateGrid_TEST = function(grid, w) {
 	var score = 0;
-	var w = this.weights;
 	grid.eachCell(function (x, y, tile) {
 		if(tile) {
 			//if(tile.value > 1024) score += tile.value * tile.value * (x+1) * (y+1);
@@ -154,7 +153,7 @@ Game_AI.prototype.evaluateMoves = function(grid) {
 
 Game_AI.prototype.search = function(level, manager) {
 	var max = [0, -1];
-	if(level==0) return [0, this.evaluateGrid_TEST(manager.grid)];
+	if(level==0) return [0, this.evaluateGrid_TEST(manager.grid, this.weights)];
 	var moves = this.evaluateMoves(manager.grid);
 	for(var index = 0; index < 4; index++) {
 		if(moves[index]) {
