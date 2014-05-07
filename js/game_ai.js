@@ -38,8 +38,8 @@ Game_AI.prototype.searchai = function(manager, that) {
 		return;
 	}
 	else {
-		var maxLevels = 8;
-		var minLevels = 4;
+		var maxLevels = 6;
+		var minLevels = 6;
 		
 		var levels = maxLevels - manager.grid.availableCells().length;
 		levels = levels < minLevels ? minLevels : levels;
